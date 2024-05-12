@@ -1,8 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_food_project2/orders.dart';
+// import 'package:flutter/widgets.dart';
+// import 'package:flutter_food_project2/orders.dart';
 
 class FoodDetails extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -156,7 +157,12 @@ class _FoodDetailsState extends State<FoodDetails> {
                   )),
               InkWell(
                 onTap: () {
-                  addToCart();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyOrders(cartItem: widget.data),
+                    ),
+                  );
                 },
                 child: Container(
                     decoration: BoxDecoration(
@@ -179,11 +185,5 @@ class _FoodDetailsState extends State<FoodDetails> {
         ],
       ),
     );
-  }
-
-  void addToCart() {
-    setState(() {
-      // widget.cart.add(widget.data);
-    });
   }
 }

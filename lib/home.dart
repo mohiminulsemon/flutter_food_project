@@ -12,7 +12,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int selectedPage = 0;
 
-  final _pageOptions = [Uidesign(), MyOrders()];
+  final _pageOptions = [const Uidesign(), const MyOrders()];
 
   @override
   Widget build(BuildContext context) {

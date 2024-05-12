@@ -15,6 +15,19 @@ class Uidesign extends StatefulWidget {
 class _UidesignState extends State<Uidesign> {
   List<Map<String, dynamic>> customer_list = customerList();
   List<Map<String, dynamic>> search_list = customerList();
+  List<Map<String, dynamic>> salad =
+      customerList().where((element) => element['type'] == 'Salads').toList();
+  List<Map<String, dynamic>> drinks =
+      customerList().where((element) => element['type'] == 'Drinks').toList();
+  List<Map<String, dynamic>> sauce =
+      customerList().where((element) => element['type'] == 'Sauce').toList();
+  List<Map<String, dynamic>> setMenu =
+      customerList().where((element) => element['type'] == 'Set Menu').toList();
+  List<Map<String, dynamic>> fastFood = customerList()
+      .where((element) => element['type'] == 'Fast Food')
+      .toList();
+  List<Map<String, dynamic>> dessert =
+      customerList().where((element) => element['type'] == 'Dessert').toList();
 
   void onQueryChanged(String query) {
     setState(() {
@@ -31,20 +44,23 @@ class _UidesignState extends State<Uidesign> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Menu',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    return DefaultTabController(
+      length: 7,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Menu',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          actions: const [
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(Icons.menu_book),
+            )
+          ],
         ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(Icons.menu_book),
-          )
-        ],
+        body: homePage(),
       ),
-      body: homePage(),
     );
   }
 
@@ -61,27 +77,49 @@ class _UidesignState extends State<Uidesign> {
                 hintText: 'search by name'),
           ),
         ),
+        const TabBar(isScrollable: true, tabs: [
+          Tab(text: 'All'),
+          Tab(text: 'Salads'),
+          Tab(text: 'Drinks'),
+          Tab(text: 'Sauce'),
+          Tab(text: 'Set Menu'),
+          Tab(text: 'Fast Food'),
+          Tab(text: 'Dessert'),
+        ]),
         Expanded(
-          child: Container(
-            decoration: const BoxDecoration(
-                color: Colors.amberAccent,
-                borderRadius:
-                    BorderRadius.only(topLeft: Radius.circular(10.0))),
-            //  color: Colors.amberAccent,
-            child: search_list.isNotEmpty
-                ? GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2),
-                    itemCount: search_list.length,
-                    itemBuilder: (context, index) {
-                      return uicard(search_list, index, context);
-                    },
-                  )
-                : const Center(child: Text("No Data Found")),
+            child: Container(
+          child: TabBarView(
+            children: [
+              buildGridView(search_list),
+              buildGridView(salad), // Salads tab view
+              buildGridView(drinks), // Drinks tab view
+              buildGridView(sauce), // Sauce tab view
+              buildGridView(setMenu), // Set Menu tab view
+              buildGridView(fastFood), // Fast Food tab view
+              buildGridView(dessert),
+            ],
           ),
-        ),
+        ))
       ],
+    );
+  }
+
+  Container buildGridView(List<Map<String, dynamic>> list) {
+    return Container(
+      decoration: const BoxDecoration(
+          color: Colors.amberAccent,
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0))),
+      //  color: Colors.amberAccent,
+      child: list.isNotEmpty
+          ? GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2),
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                return uicard(list, index, context);
+              },
+            )
+          : const Center(child: Text("No Data Found")),
     );
   }
 

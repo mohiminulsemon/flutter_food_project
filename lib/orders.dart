@@ -6,7 +6,9 @@ import 'package:flutter_food_project2/model/order_list.dart';
 import 'package:flutter_food_project2/payment_page.dart';
 
 class MyOrders extends StatefulWidget {
-  const MyOrders({super.key});
+  final Map<String, dynamic>? cartItem;
+
+  const MyOrders({Key? key, this.cartItem}) : super(key: key);
 
   @override
   State<MyOrders> createState() => _MyOrdersState();
@@ -14,10 +16,15 @@ class MyOrders extends StatefulWidget {
 
 class _MyOrdersState extends State<MyOrders> {
   List<Map<String, dynamic>> orderList = order_list();
+  // List<Map<String, dynamic>> orderList = [];
 
   @override
   void initState() {
     super.initState();
+    if (widget.cartItem != null) {
+      // Initialize orderList and add cartItem if not null
+      orderList = [widget.cartItem!];
+    }
   }
 
   @override

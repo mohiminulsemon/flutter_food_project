@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
+// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+// import 'package:flutter/widgets.dart';
 import 'package:flutter_food_project2/home.dart';
-import 'package:flutter_food_project2/uidesign.dart';
+// import 'package:flutter_food_project2/uidesign.dart';
 
 // Define a class to represent each payment method
 class PaymentMethod {
