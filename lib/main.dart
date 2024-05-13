@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_food_project2/home.dart';
-import 'package:flutter_food_project2/tab_bar.dart';
+// import 'package:flutter_food_project2/tab_bar.dart';
 // import 'package:flutter_food_project2/payment_page.dart';
 // import 'package:flutter_food_project2/uidesign.dart';
 

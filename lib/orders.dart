@@ -1,35 +1,51 @@
 // import 'package:flutter/cupertino.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_food_project2/model/customer_list.dart';
+import 'package:flutter_food_project2/model/order_list.dart';
 // import 'package:flutter/widgets.dart';
 // import 'package:flutter_food_project2/model/customer_list.dart';
-import 'package:flutter_food_project2/model/order_list.dart';
 import 'package:flutter_food_project2/payment_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyOrders extends StatefulWidget {
   final Map<String, dynamic>? cartItem;
 
-  const MyOrders({Key? key, this.cartItem}) : super(key: key);
+  const MyOrders({this.cartItem, super.key});
 
   @override
   State<MyOrders> createState() => _MyOrdersState();
 }
 
 class _MyOrdersState extends State<MyOrders> {
-  List<Map<String, dynamic>> orderList = order_list();
-  // List<Map<String, dynamic>> orderList = [];
+  // List<Map<String, dynamic>> orderList = order_list();
+  List<Map<String, dynamic>> customer_list = customerList();
 
-  @override
-  void initState() {
-    super.initState();
-    if (widget.cartItem != null) {
-      // Initialize orderList and add cartItem if not null
-      orderList = [widget.cartItem!];
+  List<Map<String, dynamic>> orderList = [];
+
+  // Method to retrieve cart items from SharedPreferences and filter customer_list
+  void _fetchCartItems() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? cartItemIds = prefs.getStringList('cart_items');
+    if (cartItemIds != null && cartItemIds.isNotEmpty) {
+      setState(() {
+        orderList = customerList()
+            .where((item) => cartItemIds.contains(item['id'].toString()))
+            .toList();
+      });
+      log(orderList.toString());
     }
   }
 
   @override
+  void initState() {
+    super.initState();
+    _fetchCartItems();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Calculate total amount
     double deliveryFee = 60;
     double discount = 30;
     double totalAmount = 0;
@@ -57,77 +73,85 @@ class _MyOrdersState extends State<MyOrders> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               Expanded(
-                child: ListView.builder(
-                    itemCount: orderList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ListTile(
-                        contentPadding: const EdgeInsets.all(0),
-                        leading: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    orderList.removeAt(index);
-                                  });
-                                },
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                )),
-                            Image.network(
-                              orderList[index]['image'],
-                              width: 60,
-                              fit: BoxFit.fill,
+                child: orderList.isNotEmpty
+                    ? ListView.builder(
+                        itemCount: orderList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ListTile(
+                            contentPadding: const EdgeInsets.all(0),
+                            leading: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        orderList.removeAt(index);
+                                      });
+                                    },
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    )),
+                                Image.network(
+                                  orderList[index]['image'],
+                                  width: 60,
+                                  fit: BoxFit.fill,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        title: Text(
-                          orderList[index]['name'],
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(orderList[index]['price'].toString()),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    if (orderList[index]['count'] > 1)
-                                      orderList[index]['count']--;
-                                  });
-                                },
-                                icon: const Icon(Icons.remove)),
-                            // Text(orderList[index]['count'].toString()),
-                            Container(
-                              width: 40,
-                              child: TextField(
-                                textAlign: TextAlign.center,
-                                keyboardType: TextInputType.number,
-                                controller: TextEditingController(
-                                    text: orderList[index]['count'].toString()),
-                                onChanged: (value) {
-                                  int parsedValue = int.tryParse(value) ?? 1;
-                                  if (parsedValue >= 1) {
-                                    setState(() {
-                                      orderList[index]['count'] = parsedValue;
-                                    });
-                                  }
-                                },
-                              ),
+                            title: Text(
+                              orderList[index]['name'],
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    orderList[index]['count']++;
-                                  });
-                                },
-                                icon: const Icon(Icons.add)),
-                          ],
-                        ),
-                      );
-                    }),
+                            subtitle:
+                                Text(orderList[index]['price'].toString()),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        if (orderList[index]['count'] > 1) {
+                                          orderList[index]['count']--;
+                                        }
+                                      });
+                                    },
+                                    icon: const Icon(Icons.remove)),
+                                // Text(orderList[index]['count'].toString()),
+                                SizedBox(
+                                  width: 40,
+                                  child: TextField(
+                                    textAlign: TextAlign.center,
+                                    keyboardType: TextInputType.number,
+                                    controller: TextEditingController(
+                                        text: orderList[index]['count']
+                                            .toString()),
+                                    onChanged: (value) {
+                                      int parsedValue =
+                                          int.tryParse(value) ?? 1;
+                                      if (parsedValue >= 1) {
+                                        setState(() {
+                                          orderList[index]['count'] =
+                                              parsedValue;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        orderList[index]['count']++;
+                                      });
+                                    },
+                                    icon: const Icon(Icons.add)),
+                              ],
+                            ),
+                          );
+                        })
+                    : const Center(child: Text("No Order Found")),
               ),
               const SizedBox(
                 height: 15,

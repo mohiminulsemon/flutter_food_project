@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_food_project2/orders.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:flutter/widgets.dart';
 // import 'package:flutter_food_project2/orders.dart';
 
@@ -16,6 +18,23 @@ class FoodDetails extends StatefulWidget {
 }
 
 class _FoodDetailsState extends State<FoodDetails> {
+  // Method to add the item ID to SharedPreferences
+  // Future<void> _addToCart() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   List<String> cartItems = prefs.getStringList('cart_items') ?? [];
+  //   cartItems.add(widget.data['id'].toString());
+  //   await prefs.setStringList('cart_items', cartItems);
+  // }
+
+  // Method to add the item ID to SharedPreferences
+  void _addToCart() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> cartItems = prefs.getStringList('cart_items') ?? [];
+    cartItems.add(widget.data['id'].toString());
+    await prefs.setStringList('cart_items', cartItems);
+    log(cartItems.toString());
+  }
+
   Widget commonImages() {
     return Padding(
       padding: const EdgeInsets.only(right: 10),
@@ -30,13 +49,12 @@ class _FoodDetailsState extends State<FoodDetails> {
     );
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    log(widget.data.toString());
-    log(widget.name);
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   log(widget.data.toString());
+  //   log(widget.name);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +159,7 @@ class _FoodDetailsState extends State<FoodDetails> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Row(
@@ -157,12 +175,19 @@ class _FoodDetailsState extends State<FoodDetails> {
                   )),
               InkWell(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MyOrders(cartItem: widget.data),
+                  _addToCart();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      content: Text('Successfully added to cart.'),
                     ),
                   );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => MyOrders(cartItem: widget.data),
+                  //   ),
+                  // );
                 },
                 child: Container(
                     decoration: BoxDecoration(
