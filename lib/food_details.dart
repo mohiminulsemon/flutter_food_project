@@ -19,14 +19,6 @@ class FoodDetails extends StatefulWidget {
 
 class _FoodDetailsState extends State<FoodDetails> {
   // Method to add the item ID to SharedPreferences
-  // Future<void> _addToCart() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   List<String> cartItems = prefs.getStringList('cart_items') ?? [];
-  //   cartItems.add(widget.data['id'].toString());
-  //   await prefs.setStringList('cart_items', cartItems);
-  // }
-
-  // Method to add the item ID to SharedPreferences
   void _addToCart() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> cartItems = prefs.getStringList('cart_items') ?? [];
