@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_food_project2/model/customer_list.dart';
-import 'package:flutter_food_project2/model/order_list.dart';
+// import 'package:flutter_food_project2/model/order_list.dart';
 // import 'package:flutter/widgets.dart';
 // import 'package:flutter_food_project2/model/customer_list.dart';
 import 'package:flutter_food_project2/payment_page.dart';
@@ -21,22 +21,7 @@ class MyOrders extends StatefulWidget {
 class _MyOrdersState extends State<MyOrders> {
   // List<Map<String, dynamic>> orderList = order_list();
   List<Map<String, dynamic>> customer_list = customerList();
-
   List<Map<String, dynamic>> orderList = [];
-
-  // Method to retrieve cart items from SharedPreferences and filter customer_list
-  // void _fetchCartItems() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   List<String>? cartItemIds = prefs.getStringList('cart_items');
-  //   if (cartItemIds != null && cartItemIds.isNotEmpty) {
-  //     setState(() {
-  //       orderList = customerList()
-  //           .where((item) => cartItemIds.contains(item['id'].toString()))
-  //           .toList();
-  //     });
-  //     log(orderList.toString());
-  //   }
-  // }
 
   void _fetchCartItems() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -47,9 +32,9 @@ class _MyOrdersState extends State<MyOrders> {
         Map<String, int> itemCountMap = {};
 
         // Count occurrences of each item ID in cartItemIds
-        cartItemIds.forEach((id) {
+        for (var id in cartItemIds) {
           itemCountMap[id] = (itemCountMap[id] ?? 0) + 1;
-        });
+        }
 
         // Filter customerList() based on cartItemIds and update the count
         orderList = customerList()
@@ -57,9 +42,9 @@ class _MyOrdersState extends State<MyOrders> {
             .toList();
 
         // Update the count in orderList based on itemCountMap
-        orderList.forEach((item) {
+        for (var item in orderList) {
           item['count'] = itemCountMap[item['id'].toString()] ?? 0;
-        });
+        }
       });
       log(orderList.toString());
     }

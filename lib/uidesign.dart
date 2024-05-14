@@ -1,6 +1,7 @@
 // import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_food_project2/favourites.dart';
 import 'package:flutter_food_project2/food_details.dart';
 import 'package:flutter_food_project2/model/customer_list.dart';
 // import 'package:flutter_food_project2/orders.dart';
@@ -52,11 +53,20 @@ class _UidesignState extends State<Uidesign> {
             'Menu',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          actions: const [
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.menu_book),
-            )
+          actions: [
+            InkWell(
+              onTap: () {
+                // Navigate to MyFavourite page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyFavourites()),
+                );
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.menu_book),
+              ),
+            ),
           ],
         ),
         body: homePage(),

@@ -18,13 +18,15 @@ class FoodDetails extends StatefulWidget {
 }
 
 class _FoodDetailsState extends State<FoodDetails> {
+  bool isFavorite = false;
+
   // Method to add the item ID to SharedPreferences
   void _addToCart() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> cartItems = prefs.getStringList('cart_items') ?? [];
     cartItems.add(widget.data['id'].toString());
     await prefs.setStringList('cart_items', cartItems);
-    log(cartItems.toString());
+    // log(cartItems.toString());
   }
 
   Widget commonImages() {
@@ -41,12 +43,38 @@ class _FoodDetailsState extends State<FoodDetails> {
     );
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   log(widget.data.toString());
-  //   log(widget.name);
-  // }
+  void checkFavorite() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? favItems = prefs.getStringList('favItems');
+    if (favItems != null) {
+      setState(() {
+        isFavorite = favItems.contains(widget.data['id'].toString());
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    checkFavorite();
+  }
+
+// Method to toggle favorite status
+  void toggleFavorite() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> favItems = prefs.getStringList('favItems') ?? [];
+    // favItems.removeLast();
+    if (isFavorite) {
+      favItems.remove(widget.data['id'].toString());
+    } else {
+      favItems.add(widget.data['id'].toString());
+    }
+    await prefs.setStringList('favItems', favItems);
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+    log(favItems.toString());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,14 +185,22 @@ class _FoodDetailsState extends State<FoodDetails> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Colors.white),
-                  child: const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Icon(Icons.favorite),
-                  )),
+              InkWell(
+                onTap: () {
+                  toggleFavorite();
+                },
+                child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Icon(
+                        Icons.favorite,
+                        color: isFavorite ? Colors.red : Colors.black,
+                      ),
+                    )),
+              ),
               InkWell(
                 onTap: () {
                   _addToCart();
@@ -174,12 +210,6 @@ class _FoodDetailsState extends State<FoodDetails> {
                       content: Text('Successfully added to cart.'),
                     ),
                   );
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => MyOrders(cartItem: widget.data),
-                  //   ),
-                  // );
                 },
                 child: Container(
                     decoration: BoxDecoration(
