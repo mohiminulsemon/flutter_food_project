@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_food_project2/carts.dart';
 import 'package:flutter_food_project2/orders.dart';
 import 'package:flutter_food_project2/uidesign.dart';
 
@@ -12,7 +13,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int selectedPage = 0;
 
-  final _pageOptions = [const Uidesign(), MyOrders()];
+  final _pageOptions = [const Uidesign(), MyCarts(), MyOrders()];
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,9 @@ class _HomeState extends State<Home> {
           selectedItemColor: Colors.amber,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.shop), label: 'Orders'),
+            BottomNavigationBarItem(icon: Icon(Icons.shop), label: 'Carts'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_bag), label: 'Orders'),
           ]),
     );
   }

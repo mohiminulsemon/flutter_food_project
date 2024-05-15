@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_food_project2/favourites.dart';
 import 'package:flutter_food_project2/food_details.dart';
 import 'package:flutter_food_project2/model/customer_list.dart';
-// import 'package:flutter_food_project2/orders.dart';
+
 
 class Uidesign extends StatefulWidget {
   const Uidesign({super.key});
@@ -64,7 +64,7 @@ class _UidesignState extends State<Uidesign> {
               },
               child: const Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Icon(Icons.menu_book),
+                child: Icon(Icons.favorite_rounded),
               ),
             ),
           ],

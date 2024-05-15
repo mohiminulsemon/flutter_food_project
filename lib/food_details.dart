@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_food_project2/orders.dart';
+import 'package:flutter_food_project2/favourites.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:flutter/widgets.dart';
-// import 'package:flutter_food_project2/orders.dart';
+
 
 class FoodDetails extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -63,7 +64,6 @@ class _FoodDetailsState extends State<FoodDetails> {
   void toggleFavorite() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> favItems = prefs.getStringList('favItems') ?? [];
-    // favItems.removeLast();
     if (isFavorite) {
       favItems.remove(widget.data['id'].toString());
     } else {
@@ -73,6 +73,7 @@ class _FoodDetailsState extends State<FoodDetails> {
     setState(() {
       isFavorite = !isFavorite;
     });
+
     log(favItems.toString());
   }
 
@@ -83,6 +84,15 @@ class _FoodDetailsState extends State<FoodDetails> {
         title: const Text(
           'Home',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyFavourites()),
+            );
+          },
         ),
       ),
       body: Column(

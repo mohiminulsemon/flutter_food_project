@@ -1,7 +1,12 @@
 // import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 // import 'package:flutter/widgets.dart';
 import 'package:flutter_food_project2/home.dart';
+import 'package:flutter_food_project2/orders.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:flutter_food_project2/uidesign.dart';
 
 // Define a class to represent each payment method
@@ -21,7 +26,9 @@ class PaymentMethod {
 
 class PaymentPage extends StatefulWidget {
   final double total;
-  const PaymentPage({Key? key, required this.total}) : super(key: key);
+  final List<Map<String, dynamic>> orderList;
+  const PaymentPage({Key? key, required this.total, required this.orderList})
+      : super(key: key);
 
   @override
   State<PaymentPage> createState() => _PaymentPageState();
@@ -174,7 +181,11 @@ class _PaymentPageState extends State<PaymentPage> {
           content: const Text('Your payment has been confirmed.'),
           actions: [
             TextButton(
-              onPressed: () {
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                final jsonString = jsonEncode(widget.orderList);
+                await prefs.setString('order_list', jsonString);
+                log(jsonString);
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
